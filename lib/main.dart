@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'database/database.dart';
 import 'network/board.dart';
 
-void main() {
+void main()
+{
     runApp(const Nida());
 }
 
-class Nida extends StatelessWidget {
+class Nida extends StatelessWidget
+{
     const Nida({super.key});
 
     // This widget is the root of your application.
     @override
-    Widget build(BuildContext context) {
+    Widget build(BuildContext context)
+    {
         return MaterialApp(
             title: 'Flutter Demo',
             theme: ThemeData(
@@ -38,7 +44,8 @@ class Nida extends StatelessWidget {
     }
 }
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatefulWidget
+{
     const HomePage({super.key, required this.title});
 
     // This widget is the home page of your application. It is stateful, meaning
@@ -56,7 +63,37 @@ class HomePage extends StatefulWidget {
     State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+{
+    Future<void> _insertDefaultSites() async
+    {
+        final Database database = await DB.getInstance();
+        database.transaction((final Transaction txn) async {
+            Batch batch = txn.batch();
+            Map<String, Object?> data = {'id': 1,'name': '5ch.net', 'url': 'https://www2.5ch.net/5ch.html'};
+            batch.insert('t_sites', data);
+            List<BoardObject>? board = await Board(data['url'] as String).start();
+
+            // 他のサイトも後で追加
+            batch.commit();
+        });
+    }
+
+    @override
+    void initState()
+    {
+        Future(() async {
+            final SharedPreferences prefs = await SharedPreferences.getInstance();
+            int site = prefs.getInt('counter') ?? 0;
+            if (site == 0) {
+                _insertDefaultSites();
+                site = 1;
+                prefs.setInt('site', site);
+            }
+        });
+        super.initState();
+    }
+
     int _counter = 0;
 
     void _incrementCounter() {
@@ -78,7 +115,8 @@ class _HomePageState extends State<HomePage> {
     }
 
     @override
-    Widget build(BuildContext context) {
+    Widget build(BuildContext context)
+    {
         // This method is rerun every time setState is called, for instance as done
         // by the _incrementCounter method above.
         //

@@ -16,7 +16,7 @@ class DB
                         CREATE TABLE t_sites(
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             name TEXT NOT NULL,                     -- サイト名
-                            url TEXT NOT NULL,                      -- bbsのURL
+                            url TEXT NOT NULL                       -- bbsのURL
                         )
                     '''
                 );
@@ -55,10 +55,12 @@ class DB
                         CREATE TABLE t_responses(
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             thread_id INTEGER NOT NULL,             -- 所属するスレッド
-                            name TEXT NOT NULL,                     -- スレッド名
+                            name TEXT DEFAULT NULL,                 -- 投稿者名
+                            email TEXT DEFAULT NULL,                -- 投稿者メアド
                             uid TEXT DEFAULT NULL,                  -- ID
                             wacchoi TEXT DEFAULT NULL,              -- ワッチョイ
                             ip TEXT DEFAULT NULL,                   -- IPアドレス
+                            unix INTEGER NOT NULL                   -- 投稿された日時
 
                         )
                     '''
