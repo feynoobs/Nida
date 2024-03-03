@@ -9,14 +9,14 @@ class BoardObject
     BoardObject(this.group, this.boards);
 }
 
-
 class Board
 {
     final String url;
     Board(this.url);
-    Future<List<BoardObject>?> start() async
+
+    Future<List<BoardObject>> start() async
     {
-        const List<BoardObject>? r = null;
+        List<BoardObject> r = [];
         await http
             .get(Uri.parse(url))
             .then((final http.Response response) {
@@ -28,23 +28,21 @@ class Board
                 }
             })
             .then((final String data) {
-                final Map<String, String> boards = {};
                 final RegExp exp1 = RegExp(r'<br><br><B>(.+?)</B><br>\n((?:<A HREF=".+?">.+?</A>(?:<br>)?\n)+)');
                 final Iterable<RegExpMatch> matches1 = exp1.allMatches(data);
                 for (final m1 in matches1) {
+                    List<Map<String, String>> group = [];
                     final RegExp exp2 = RegExp(r'(?:<A HREF="(.+?)">(.+?)</A>(?:<br>)?)+');
                     final Iterable<RegExpMatch> matches2 = exp2.allMatches(m1[2]!);
-                    print('***'+m1[1]!+'***');
                     for (final m2 in matches2) {
-                        boards[m2[1]!] = m2[2]!;
-                        print(m2[1]);
-                        print(m2[2]);
+                        group.add({m2[2]!: m2[1]!});
                     }
+                    BoardObject obj = BoardObject(m1[1]!, group);
+                    r.add(obj);
                 }
             })
             .catchError((err) {
                 print(err);
-                // nop
             });
 
         return r;

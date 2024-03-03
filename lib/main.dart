@@ -109,8 +109,8 @@ class _HomePageState extends State<HomePage>
 
     void _test()
     {
-        Board a = Board();
-        a.start('https://www2.5ch.net/5ch.html');
+        Board a = Board('https://www2.5ch.net/5ch.html');
+        a.start();
         // a.start('https://spiqa.design/knowledge/1645/');
     }
 
