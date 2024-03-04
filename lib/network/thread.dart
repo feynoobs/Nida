@@ -9,7 +9,6 @@ class ThreadObject
     ThreadObject(this.sequence, this.title, this.post);
 }
 
-
 class Thread
 {
     final String url;
@@ -17,7 +16,7 @@ class Thread
 
     Future<List<ThreadObject>> start() async
     {
-        const List<ThreadObject> r = [];
+        List<ThreadObject> r = [];
         await http
             .get(Uri.parse(url))
             .then((final http.Response response) {
@@ -29,11 +28,16 @@ class Thread
                 }
             })
             .then((final String data) {
-                final RegExp exp = RegExp(r'(\d{10})\.dat<>(.+\s)\(\d+\)');
-                final Iterable<RegExpMatch> matches = exp.allMatches(data);
-                for (final m in matches) {
-                    ThreadObject obj = ThreadObject(int.parse(m[1]!), m[2]!, int.parse(m[3]!));
-                    r.add(obj);
+                final RegExp exp = RegExp(r'(\d{10})\.dat<>(.+)\s\s\((\d+)\)');
+                final List<String> lines = data.split("\n");
+
+                for (final line in lines) {
+                    final Iterable<RegExpMatch> matches = exp.allMatches(line);
+                    for (final m in matches) {
+                        print(m);
+                        ThreadObject obj = ThreadObject(int.parse(m[1]!), m[2]!, int.parse(m[3]!));
+                        r.add(obj);
+                    }
                 }
             })
             .catchError((err) {

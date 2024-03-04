@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'database/database.dart';
 import 'network/board.dart';
+import 'network/thread.dart';
 
 void main()
 {
@@ -68,6 +69,7 @@ class _HomePageState extends State<HomePage>
     Future<void> _insertDefaultSites() async
     {
         final Database database = await DB.getInstance();
+        /*
         database.transaction((final Transaction txn) async {
             Batch batch = txn.batch();
             Map<String, Object?> data = {'id': 1,'name': '5ch.net', 'url': 'https://www2.5ch.net/5ch.html'};
@@ -77,6 +79,7 @@ class _HomePageState extends State<HomePage>
             // 他のサイトも後で追加
             batch.commit();
         });
+        */
     }
 
     @override
@@ -111,6 +114,8 @@ class _HomePageState extends State<HomePage>
     {
         Board a = Board('https://www2.5ch.net/5ch.html');
         a.start();
+        Thread t = Thread('https://egg.5ch.net/applism/subject.txt');
+        t.start();
         // a.start('https://spiqa.design/knowledge/1645/');
     }
 
