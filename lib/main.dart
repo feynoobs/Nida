@@ -69,7 +69,6 @@ class _HomePageState extends State<HomePage>
     Future<void> _insertDefaultSites() async
     {
         final Database database = await DB.getInstance();
-        /*
         database.transaction((final Transaction txn) async {
             Batch batch = txn.batch();
             Map<String, Object?> data = {'id': 1,'name': '5ch.net', 'url': 'https://www2.5ch.net/5ch.html'};
@@ -79,7 +78,6 @@ class _HomePageState extends State<HomePage>
             // 他のサイトも後で追加
             batch.commit();
         });
-        */
     }
 
     @override
@@ -87,7 +85,7 @@ class _HomePageState extends State<HomePage>
     {
         Future(() async {
             final SharedPreferences prefs = await SharedPreferences.getInstance();
-            int site = prefs.getInt('counter') ?? 0;
+            int site = prefs.getInt('site') ?? 0;
             if (site == 0) {
                 _insertDefaultSites();
                 site = 1;
