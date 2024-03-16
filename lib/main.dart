@@ -71,7 +71,8 @@ class _HomePageState extends State<HomePage>
         final Database database = await DB.getInstance();
         database.transaction((final Transaction txn) async {
             Batch batch = txn.batch();
-            Map<String, Object?> data = {'id': 1,'name': '5ch.net', 'url': 'https://www2.5ch.net/5ch.html'};
+            Map<String, Object?> data = {'id':
+             1,'name': '5ch.net', 'url': 'https://www2.5ch.net/5ch.html'};
             batch.insert('t_sites', data);
             List<BoardObject>? board = await Board(data['url'] as String).start();
 
